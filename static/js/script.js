@@ -117,9 +117,15 @@ async function handleSubmit(event) {
     const notification = showNotification('🔄 正在保存配置...', 'info');
 
     try {
+        const formData = new FormData(form);
+        // 打印表单数据，方便调试
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
+
         const response = await fetch(form.action, {
             method: 'POST',
-            body: new FormData(form),
+            body: formData,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': 'application/json'
@@ -134,6 +140,8 @@ async function handleSubmit(event) {
         const data = await response.json();
         showNotification('✅ 配置保存成功', 'success', 3000);
         console.log('[Submit] 保存成功:', data.config);
+        // 刷新页面
+        location.reload(); 
     } catch (error) {
         console.error('[Submit] 保存失败:', error);
         showNotification(`❌ 保存失败: ${error.message}`, 'error', 5000);

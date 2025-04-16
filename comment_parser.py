@@ -1,6 +1,7 @@
 from ruamel.yaml import YAML
 from ruamel.yaml.comments import CommentedMap, CommentedSeq
 from collections.abc import MutableMapping, MutableSequence
+import logging
 
 class ConfigCommentParser:
     def __init__(self):
@@ -129,4 +130,43 @@ class ConfigCommentParser:
                 comments.setdefault(path, []).extend(cleaned)
         except Exception as e:
             print(f"注释添加失败 @ {path}: {str(e)}")
+
+
+class ConfigCommentParser:
+    def parse_comments(self, config_path):
+        try:
+            with open(config_path, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+            comments = {}
+            current_key = None
+            for line_number, line in enumerate(lines, start=1):
+                stripped_line = line.strip()
+                if stripped_line.startswith('#'):
+                    comment = stripped_line[1:].strip()
+                    if current_key is not None:
+                        if current_key not in comments:
+                            comments[current_key] = []
+                        comments[current_key].append({
+                            'line': line_number,
+                            'comment': comment
+                        })
+                elif stripped_line:
+                    # 尝试解析键名
+                    if ':' in stripped_line:
+                        key = stripped_line.split(':', 1)[0].strip()
+                        current_key = key
+                    elif '[' in stripped_line and ']' in stripped_line:
+                        # 处理数组项
+                        start = stripped_line.find('[')
+                        end = stripped_line.find(']')
+                        if start != -1 and end != -1:
+                            index = stripped_line[start + 1:end]
+                            if current_key:
+                                array_key = f"{current_key}[{index}]"
+                                current_key = array_key
+                logging.debug(f"Line {line_number}: {line.strip()}, Current key: {current_key}")
+            return comments
+        except Exception as e:
+            logging.error(f"解析注释时出错: {str(e)}", exc_info=True)
+            return {}
 

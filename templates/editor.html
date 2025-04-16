@@ -21,8 +21,8 @@
         </div>
     </div>
 
-    <!-- 配置表单 -->
-    <form method="post" id="configForm">
+    <!-- 修改 action 属性为 /submit_config -->
+    <form method="post" id="configForm" action="{{ url_for('config_editor') }}">
         <!-- 注释数据容器 -->
         <script type="application/json" id="comments-data">
             {{ comments|tojson|safe }}

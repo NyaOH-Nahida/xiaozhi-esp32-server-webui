@@ -80,7 +80,8 @@ def parse_form_data(form_data):
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET', 'POST'])
+# 修改路由为 /submit_config
+@app.route('/submit_config', methods=['GET', 'POST'])
 def config_editor():
     config = load_config()
     if request.method == 'POST':

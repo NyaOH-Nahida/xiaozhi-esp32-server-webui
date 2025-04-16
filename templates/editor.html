@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>智能配置中心</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <!-- 操作栏 -->
+    <div class="action-bar">
+        <!-- 搜索容器 -->
+        <div class="search-container-wrapper">
+            <div class="search-container">
+                <input type="text" 
+                       id="searchInput"
+                       class="search-box"
+                       placeholder="🔍 输入配置项名称/描述/注释..."
+                       autocomplete="off">
+                <div class="search-results" id="searchResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 配置表单 -->
+    <form method="post" id="configForm">
+        <!-- 注释数据容器 -->
+        <script type="application/json" id="comments-data">
+            {{ comments|tojson|safe }}
+        </script>
+
+        <!-- 配置内容 -->
+        <div class="config-container">
+            {% macro render_field(value, path) %}
+            <div class="config-item" data-path="{{ path }}">
+                {% if comments.get(path) %}
+                <div class="config-comment">
+                    {% for line in comments[path] %}
+                    <p class="comment-line">📌 {{ line }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if value is mapping %}
+                    <div class="nested-section">
+                        {% for k, v in value.items() %}
+                        <div class="config-group">
+                            <div class="config-header">
+                                <h3 class="config-title">{{ k }}</h3>
+                                {% if hints.get(path + '.' + k) %}
+                                <div class="config-description">{{ hints[path + '.' + k] }}</div>
+                                {% endif %}
+                            </div>
+                            {{ render_field(v, path + '.' + k if path else k) }}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                {% elif value is sequence and value is not string %}
+                    <div class="array-section">
+                        <div class="array-items" id="{{ path }}-items">
+                            {% for item in value %}
+                            <div class="array-item">
+                                {% if item is mapping %}
+                                    {{ render_field(item, path + '[%d]' % loop.index0) }}
+                                {% else %}
+                                <div class="input-group">
+                                    <input type="text" 
+                                           name="{{ path }}[{{ loop.index0 }}]" 
+                                           value="{{ item }}"
+                                           class="array-input"
+                                           placeholder="输入值...">
+                                    <button type="button" 
+                                            class="delete-button"
+                                            onclick="this.parentElement.remove()">🗑️ 删除</button>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button type="button" 
+                                class="add-button"
+                                onclick="addArrayItem('{{ path }}')">➕ 添加项</button>
+                    </div>
+
+                {% else %}
+                <div class="value-group">
+                    <div class="input-header">
+                        <span class="input-label">{{ path.split('.')[-1] }}</span>
+                        {% if hints.get(path) %}
+                        <div class="input-description">{{ hints[path] }}</div>
+                        {% endif %}
+                    </div>
+                    <input type="text" 
+                           name="{{ path }}" 
+                           value="{{ value }}"
+                           class="value-input"
+                           placeholder="输入值...">
+                </div>
+                {% endif %}
+            </div>
+            {% endmacro %}
+            {{ render_field(config, '') }}
+        </div>
+
+        <!-- 保存按钮栏 -->
+        <div class="save-bar">
+            <button type="submit" class="save-button">
+                <span class="icon">💾</span>
+                <span class="text">保存配置</span>
+            </button>
+        </div>
+    </form>
+
+    <!-- 通知容器 -->
+    <div id="notification"></div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

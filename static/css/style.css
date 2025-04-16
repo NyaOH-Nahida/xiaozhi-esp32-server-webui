@@ -1,0 +1,244 @@
+:root {
+    --primary-color: #409EFF;
+    --secondary-color: #67C23A;
+    --danger-color: #F56C6C;
+    --background-color: #f8fafb;
+    --card-bg: #ffffff;
+    --text-color: #2c3e50;
+    --border-color: #e0e6ed;
+    --shadow-light: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* 操作栏 */
+.action-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    padding: 1rem 2rem;
+    box-shadow: var(--shadow-light);
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+}
+
+/* 搜索容器 */
+.search-container {
+    position: relative;
+    flex: 1;
+    max-width: 800px;
+    width: 100%;
+    margin-right: 15px;
+    transition: all 0.3s ease;
+}
+
+.search-box {
+    width: 100%;
+    padding: 0.8rem 1.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.search-box:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(64, 158, 255, 0.2);
+}
+
+/* 搜索结果 */
+.search-results {
+    position: absolute;
+    top: calc(100% + 8px);
+    max-height: 400px;
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow-light);
+    z-index: 2000;
+    display: none;
+    padding: 8px 0;
+    width: 100%;
+}
+
+.search-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-color);
+    transition: transform 0.2s ease;
+}
+
+.search-item:hover {
+    background: rgba(64, 158, 255, 0.05);
+    transform: translateX(4px);
+}
+
+/* 配置容器 */
+.config-container {
+    margin-top: 120px;
+    padding: 2rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 配置组 */
+.config-group {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border: 2px solid var(--border-color);
+    transition: transform 0.2s ease;
+}
+
+.config-group:hover {
+    transform: translateY(-2px);
+}
+
+/* 输入项 */
+.value-input {
+    width: 100%;
+    max-width: 600px;
+    padding: 0.8rem 1.2rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.value-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(64, 158, 255, 0.2);
+}
+
+/* 保存按钮栏 */
+.save-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 2rem;
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    z-index: 1001;
+    backdrop-filter: blur(8px);
+    text-align: right;
+}
+
+.save-button {
+    background: var(--secondary-color);
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 100;
+}
+
+.save-button:hover {
+    background: #5daf36;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(103, 194, 58, 0.3);
+}
+
+/* 通知系统 */
+#notification {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.notification {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: notificationSlideIn 0.3s ease-out;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.notification.success {
+    background: #4CAF50;
+    color: white;
+}
+
+.notification.error {
+    background: #f44336;
+    color: white;
+}
+
+@keyframes notificationSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 数组项 */
+.array-section {
+    margin: 1.5rem 0;
+}
+
+.array-items {
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    padding: 1.2rem;
+    background: rgba(244, 247, 250, 0.6);
+}
+
+/* 注释样式 */
+.config-comment {
+    background: #f8f9fa;
+    border-left: 3px solid var(--primary-color);
+    padding: 10px 15px;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
+.comment-line {
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* 按钮通用样式 */
+.add-button, .delete-button {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.add-button:hover {
+    transform: translateY(-1px);
+}
+
+.delete-button:hover {
+    transform: scale(1.05);
+}
+
+/* 高亮动画 */
+@keyframes highlight {
+    from { background: rgba(64, 158, 255, 0.3); }
+    to { background: rgba(64, 158, 255, 0.1); }
+}
